@@ -1,5 +1,6 @@
 package exercise.application;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class S3Service {
         try {
             amazonS3.putObject(bucket, path, file.getInputStream(), metadata);
             return getImageUrl(amazonS3.getUrl(bucket, path).toString(), base);
-        } catch (IOException e) {
+        } catch (IOException | AmazonServiceException e) {
             throw new RuntimeException("파일을 업로드하지 못했습니다.", e);
         }
     }
