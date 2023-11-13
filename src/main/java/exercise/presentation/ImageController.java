@@ -3,7 +3,7 @@ package exercise.presentation;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
-import exercise.application.ImageService;
+import exercise.application.ImageServiceFacade;
 import exercise.domain.Image;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ImageController {
 
-    private final ImageService imageService;
+    private final ImageServiceFacade imageServiceFacade;
 
     @GetMapping("/")
     public String index() {
@@ -31,14 +31,14 @@ public class ImageController {
             @RequestPart(value = "file") MultipartFile file,
             RedirectAttributes redirectAttributes
     ) {
-        imageService.save(file);
+        imageServiceFacade.save(file);
         redirectAttributes.addFlashAttribute("message", "이미지가 성공적으로 업로드 되었습니다.");
         return "redirect:/images";
     }
 
     @GetMapping("/images")
     public String readAll(Model model) {
-        List<Image> images = imageService.readAll();
+        List<Image> images = imageServiceFacade.readAll();
         model.addAttribute("images", images);
         return "images";
     }

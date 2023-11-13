@@ -4,9 +4,10 @@ import exercise.domain.Image;
 import exercise.domain.ImageRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Transactional
@@ -14,13 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageService {
 
     private final ImageRepository imageRepository;
-    private final S3Service s3Service;
 
-    public void save(MultipartFile file) {
-        String imageUrl = s3Service.upload(file);
-        imageRepository.save(new Image(imageUrl));
+    @CacheEvict(cacheNames = "images")
+    public void save(Image image) {
+        imageRepository.save(image);
     }
 
+    @Cacheable(cacheNames = "images")
     @Transactional(readOnly = true)
     public List<Image> readAll() {
         return imageRepository.findAll();
