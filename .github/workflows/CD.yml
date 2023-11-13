@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ip-172-31-3-169
+    runs-on: self-hosted
 
     steps:
       - name: 배포 스크립트 실행
