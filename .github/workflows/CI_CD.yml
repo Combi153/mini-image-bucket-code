@@ -1,10 +1,7 @@
-name: CI
+name: CI_CD
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -55,3 +52,24 @@ jobs:
           fields: repo.message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_CI }}
+
+  deploy:
+    needs: build
+    runs-on: huchu-prod
+
+    steps:
+      - name: 배포 스크립트 실행
+        run: |
+          cd
+          sudo sh deploy.sh
+        working-directory: ${{ env.working-directory }}
+
+      - name: slack 알림
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          fields: repo.message,commit,author,action,workflow
+          mention: here
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_CD }}
