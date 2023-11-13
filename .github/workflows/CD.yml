@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: huhcu-prod
+    runs-on: ip-172-31-3-169
 
     steps:
       - name: 배포 스크립트 실행
