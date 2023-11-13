@@ -14,4 +14,13 @@ jobs:
         run: |
           cd
           sudo sh deploy.sh
-        working-directory: ${{ env.working-directory }}
+
+      - name: slack 알림
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          fields: repo.message
+          mention: here
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_CI }}
