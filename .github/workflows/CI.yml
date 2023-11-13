@@ -46,3 +46,12 @@ jobs:
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
           token: ${{ github.token }}
+
+      - name: slack 알림
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          fields: repo.message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_CI }}
