@@ -30,7 +30,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: 빌드 수행
-        run: ./gradlew build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
 
       - name: 테스트 결과 코멘트 등록
         uses: EnricoMi/publish-unit-test-result-action@v2
